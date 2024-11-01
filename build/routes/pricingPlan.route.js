@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pricingPlanRouter = void 0;
+const routeGenerics_1 = require("../types/routeGenerics");
+const entities_1 = require("../entities");
+//import { PricingPlanController } from "../controllers/pricingPlan.controller";
+const schemas_1 = require("../schemas");
+const pricingPlan_dto_1 = require("../entities/pricingPlan/dtos/pricingPlan.dto");
+const pricingPlanRouter = () => {
+    const pricingPlanRoutes = (0, routeGenerics_1.genericRoutes)(entities_1.PricingPlan, entities_1.PricingPlan, pricingPlan_dto_1.PricingPlanDto, schemas_1.PricingPlanSchema);
+    //const pricingPlanController = new PricingPlanController();
+    // pricinplanRoutes.get("/", (req, res) => pricinplanController.getAll(req, res));
+    // pricinplanRoutes.get("/getAllDeleted/", (req, res) => pricinplanController.getAllDeleted(req, res));
+    // pricinplanRoutes.get("/getById/:id", (req, res) => pricinplanController.getById(req, res));
+    // pricinplanRoutes.post("/", (req, res) => pricinplanController.create(req, res));
+    // pricinplanRoutes.patch("/:id", (req, res) => pricinplanController.update(req, res));
+    // pricinplanRoutes.delete("/:id", (req, res) => pricinplanController.delete(req, res));
+    // pricinplanRoutes.delete("/logicDelete/:id", (req, res) => pricinplanController.logicDelete(req, res));
+    // pricinplanRoutes.patch("/restore/:id", (req, res) => pricinplanController.restoreLogicDeleted(req, res));
+    return pricingPlanRoutes;
+};
+exports.pricingPlanRouter = pricingPlanRouter;
