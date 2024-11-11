@@ -11,6 +11,11 @@ export const dbConfig = {
   synchronize: true, 
   subscribers: [],
   migrations: [],
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
 };
 
 export const limit = 20;  // Límite de items devueltos por página
