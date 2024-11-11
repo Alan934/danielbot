@@ -16,6 +16,13 @@ export class Flow extends Base {
   })
   description!: string;
 
+  @Column({
+    type: "boolean",
+    nullable: true,
+    default: false,
+  })
+  isDeleted: boolean | null = false;
+
   @OneToMany(() => Message, (message) => message.flow)
   messages!: Message[];
 

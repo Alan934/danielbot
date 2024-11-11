@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import { DatabaseType } from "typeorm";
-
-import * as Entities from "./entities/index";
+import * as Entities from "./entities";  // Asegúrate de importar todas las entidades correctamente
 
 dotenv.config();
 
@@ -9,8 +8,9 @@ export const dbConfig = {
   type: (process.env.DB_TYPE as DatabaseType) || "postgres",
   url: process.env.DB_URL || "sqlite:memory",
   entities: Object.values(Entities),
-  synchronize: process.env.SYNC_DATABASE || true,
+  synchronize: true, 
+  subscribers: [],
+  migrations: [],
 };
 
-//Limite de items devuetos por página
-export const limit = 20;
+export const limit = 20;  // Límite de items devueltos por página

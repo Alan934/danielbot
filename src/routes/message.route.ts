@@ -34,6 +34,23 @@ export const messageRouter = () => {
       messageController.findAllMessages(req, res)
   );
 
+  messageRoutes.get(
+    "/getAllMain",
+    authMiddleware,
+    checkRoleAuth(["admin", "redactor"]),
+    (req, res) =>
+      /* 
+      #swagger.path = '/messages/getAllWithFlow'
+      #swagger.tags = ['Message']
+      #sagger.description = 'Esta ruta trae todos los mensajes Padres con sus Hijos '/messages/''
+      #swagger.security = [{
+						"bearerAuth": []
+					}]
+     
+     */
+      messageController.findAllMainMessages(req, res)
+  );
+
   messageRoutes.post(
     "/create",
     authMiddleware,
@@ -160,6 +177,81 @@ export const messageRouter = () => {
      */
       messageController.findAllMessagesByNumOrderAndFlowByName(req, res)
   );
+  
+  messageRoutes.get(
+    "/AllWithChildren",
+    authMiddleware,
+    checkRoleAuth(["admin", "redactor"]),
+    (req, res) =>
+      /* 
+      #swagger.path = '/messages/AllWithChildren'
+      #swagger.tags = ['Message']
+      #swagger.description = 'Esta ruta trae todos los mensajes junto con sus submensajes y sus respectivos submensajes hijos.'
+      #swagger.security = [{ "bearerAuth": [] }]
+      */
+      messageController.getMessagesWithSubMessages(req, res)
+  );
+  
+  messageRoutes.get(
+    "/getOneWithChildren/:id",
+    authMiddleware,
+    checkRoleAuth(["admin", "redactor", "empleado"]),
+    (req, res) =>
+      /* 
+      #swagger.path = '/messages/getOneWithChildren/{id}'
+      #swagger.tags = ['Message']
+      #swagger.description = 'Esta ruta trae un mensaje específico y sus submensajes, incluyendo los submensajes hijos.'
+      #swagger.security = [{ "bearerAuth": [] }]
+      */
+      messageController.getOneWithSubMessages(req, res)
+  );
+  
+  messageRoutes.put("/update/:id",
+    authMiddleware,
+    checkRoleAuth(["admin", "redactor", "empleado"]),
+    (req, res) =>
+      /* 
+      #swagger.path = '/messages/update/{id}'
+      #swagger.tags = ['Message']
+      #swagger.description = 'Esta ruta actualiza un mensaje específico junto con sus detalles. Se puede actualizar la relación con flow y enterprise si es necesario.'
+      #swagger.security = [{ "bearerAuth": [] }]
+      */
+      messageController.updateMessage(req, res)
+  );
+
+  messageRoutes.delete(
+    "/softDelete/:id",
+    authMiddleware,
+    checkRoleAuth(["admin", "redactor"]),
+    (req, res) =>
+      /* 
+        #swagger.path = '/messages/softDelete/{id}'
+        #swagger.tags = ['Message']
+        #swagger.description = 'Realiza un borrado lógico de un Mensaje específico'
+        #swagger.parameters['id'] = { description: 'ID del mensaje a eliminar' }
+        #swagger.security = [{
+          "bearerAuth": []
+        }]
+      */
+        messageController.softDeleteMessage(req, res)
+  );
+
+  messageRoutes.get(
+    "/menuWithChildren",
+    authMiddleware,
+    checkRoleAuth(["admin", "redactor"]),
+    (req, res) =>
+      /* 
+      #swagger.path = '/messages/menuWithChildren'
+      #swagger.tags = ['Message']
+      #swagger.description = 'Esta ruta trae todos los mensajes con opción "MENU" junto con sus submensajes y sus respectivos submensajes hijos.'
+      #swagger.security = [{ "bearerAuth": [] }]
+      */
+      messageController.getMenuMessagesWithSubMessages(req, res)
+);
+
+  // messageRoutes.get("/messages-with-submessages", authMiddleware, funcionando con metodo comentado de controller
+  // checkRoleAuth(["admin", "redactor"]), MessageController.getMessagesWithSubMessages);
 
   // messageRoutes.patch("/:id", (req, res) => messageController.update(req, res));
   // messageRoutes.delete("/:id", (req, res) => messageController.delete(req, res));
@@ -167,3 +259,4 @@ export const messageRouter = () => {
   // messageRoutes.patch("/restore/:id", (req, res) => messageController.restoreLogicDeleted(req, res));
   return messageRoutes;
 };
+

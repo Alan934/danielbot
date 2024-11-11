@@ -47,25 +47,24 @@ export class GenericController<T extends Base, U extends Partial<T>> {
   protected async getEnterpriseId(req: Request, res: Response): Promise<any> {
     const profileRepository = new ProfileRepository();
     var profile;
-    const propertiesOfEntity = this.repository.metadata.columns.map(
-      (column) => column.propertyName
-    );
-    if (propertiesOfEntity.includes("enterprise")) {
+   // const propertiesOfEntity = this.repository.metadata.columns.map(
+   //   (column) => column.propertyName
+   //);
+    //if (propertiesOfEntity.includes("enterprise")) {
       profile = await getUserByJWT(req);
       if (profile instanceof CustomError) {
         return handleErrors(profile, res);
       }
-    }
+    //  console.log(JSON.stringify(profile,null,2));
+   // }
     const profileId = profile ? profile.sub : undefined;
     var enterpriseId;
-
     if (profileId && profileRepository) {
       const profileEntity =
         await profileRepository.findOneProfileWithEnterprise(profileId);
       enterpriseId = profileEntity?.enterprise.id;
       return enterpriseId;
     }
-
     return undefined;
   }
 

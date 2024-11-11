@@ -37,7 +37,7 @@
       "description": "Rutas genéricas"
     }
   ],
-  "schemes": "http",
+  "schemes": "https",
   "securityDefinitions": {
     "bearerAuth": {
       "type": "apiKey",
@@ -246,6 +246,68 @@
         ]
       }
     },
+    "/flows/getAllWithMessages": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "description": "",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/flows/getAll": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "description": "Esta ruta trae todos los flujos con sus mensajes y submensajes relacionados, incluyendo los submensajes hijos.",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/flows/getOne/{id}": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "description": "Esta ruta trae un flujo específico, sus mensajes relacionados y los submensajes hasta los hijos de los submensajes.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/messages/getAllWithFlow": {
       "get": {
         "tags": [
@@ -397,6 +459,76 @@
               "type": "integer"
             },
             "description": "Número de orden del mensaje"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/messages/AllWithChildren": {
+      "get": {
+        "tags": [
+          "Message"
+        ],
+        "description": "Esta ruta trae todos los mensajes junto con sus submensajes y sus respectivos submensajes hijos.",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/messages/getOneWithChildren/{id}": {
+      "get": {
+        "tags": [
+          "Message"
+        ],
+        "description": "Esta ruta trae un mensaje específico y sus submensajes, incluyendo los submensajes hijos.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/messages/update/{id}": {
+      "put": {
+        "tags": [
+          "Message"
+        ],
+        "description": "Esta ruta actualiza un mensaje específico junto con sus detalles. Se puede actualizar la relación con flow y enterprise si es necesario.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -706,6 +838,102 @@
             "description": ""
           }
         }
+      }
+    },
+    "/subMessages/getAll": {
+      "get": {
+        "tags": [
+          "SubMessage"
+        ],
+        "description": "Esta ruta trae todos los submensajes registrados en el sistema.",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/subMessages/getOne/{id}": {
+      "get": {
+        "tags": [
+          "SubMessage"
+        ],
+        "description": "Esta ruta obtiene un submensaje específico por su ID, incluyendo su mensaje padre y sus submensajes hijos si los tiene.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/subMessages/create/{id}": {
+      "post": {
+        "tags": [
+          "SubMessage"
+        ],
+        "description": "Esta ruta crea un nuevo submensaje y lo asocia con el mensaje especificado por ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/subMessages/update/{id}": {
+      "put": {
+        "tags": [
+          "SubMessage"
+        ],
+        "description": "Esta ruta actualiza un submensaje específico, permitiendo modificar sus datos y la relación con su mensaje padre.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/{entidad}/": {

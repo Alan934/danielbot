@@ -3,9 +3,9 @@ import { Request } from "express";
 import { CustomError } from "../types";
 const secret = process.env.JWT_SECRET || "";
 
-export const verifyJWT = async (token: string) => {
+export const verifyJWT = (token: string) => {
   try {
-    const decodedToken = await verify(token, secret);
+    const decodedToken = verify(token, secret);
     return decodedToken;
   } catch (error) {
     throw new CustomError("Failed to authenticate token" + error, 401);

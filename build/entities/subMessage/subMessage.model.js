@@ -9,36 +9,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Message = void 0;
+exports.SubMessage = void 0;
 const typeorm_1 = require("typeorm");
 const base_model_1 = require("../base/base.model");
-const enterprise_1 = require("../enterprise");
-const flow_model_1 = require("../flow/flow.model");
-const subMessage_model_1 = require("../subMessage/subMessage.model");
+const message_model_1 = require("../message/message.model"); // Clase Message principal
 const optionEnum_1 = require("../../enums/optionEnum");
-let Message = class Message extends base_model_1.Base {
+let SubMessage = class SubMessage extends base_model_1.Base {
     constructor() {
         super(...arguments);
         this.option = null;
         this.isNumber = null;
-        this.isDeleted = false;
         this.showName = null;
         this.isName = null;
+        this.isDeleted = false;
     }
 };
-exports.Message = Message;
+exports.SubMessage = SubMessage;
 __decorate([
     (0, typeorm_1.Column)({
         nullable: true,
     }),
     __metadata("design:type", Number)
-], Message.prototype, "numOrder", void 0);
+], SubMessage.prototype, "numOrder", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         nullable: true,
     }),
     __metadata("design:type", String)
-], Message.prototype, "body", void 0);
+], SubMessage.prototype, "body", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: "enum",
@@ -46,14 +44,28 @@ __decorate([
         nullable: true,
     }),
     __metadata("design:type", Object)
-], Message.prototype, "option", void 0);
+], SubMessage.prototype, "option", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: "boolean",
         nullable: true,
     }),
     __metadata("design:type", Object)
-], Message.prototype, "isNumber", void 0);
+], SubMessage.prototype, "isNumber", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: "boolean",
+        nullable: true,
+    }),
+    __metadata("design:type", Object)
+], SubMessage.prototype, "showName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: "boolean",
+        nullable: true,
+    }),
+    __metadata("design:type", Object)
+], SubMessage.prototype, "isName", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: "boolean",
@@ -61,44 +73,25 @@ __decorate([
         default: false,
     }),
     __metadata("design:type", Object)
-], Message.prototype, "isDeleted", void 0);
+], SubMessage.prototype, "isDeleted", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        type: "boolean",
+    (0, typeorm_1.ManyToOne)(() => message_model_1.Message, (message) => message.subMessages, {
+        onDelete: "CASCADE",
         nullable: true,
+    }),
+    __metadata("design:type", message_model_1.Message)
+], SubMessage.prototype, "message", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => SubMessage, (subMessage) => subMessage.childSubMessages, {
+        nullable: true,
+        onDelete: "SET NULL",
     }),
     __metadata("design:type", Object)
-], Message.prototype, "showName", void 0);
+], SubMessage.prototype, "parentSubMessage", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        type: "boolean",
-        nullable: true,
-    }),
-    __metadata("design:type", Object)
-], Message.prototype, "isName", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => enterprise_1.Enterprise, (enterprise) => enterprise.messages, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-        cascade: true,
-        nullable: true,
-    }),
-    (0, typeorm_1.JoinColumn)({ name: "enterpriseId" }),
-    __metadata("design:type", enterprise_1.Enterprise)
-], Message.prototype, "enterprise", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => flow_model_1.Flow, (flow) => flow.messages, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-        cascade: true,
-        nullable: true,
-    }),
-    __metadata("design:type", flow_model_1.Flow)
-], Message.prototype, "flow", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => subMessage_model_1.SubMessage, (subMessage) => subMessage.message),
+    (0, typeorm_1.OneToMany)(() => SubMessage, (subMessage) => subMessage.parentSubMessage),
     __metadata("design:type", Array)
-], Message.prototype, "subMessages", void 0);
-exports.Message = Message = __decorate([
-    (0, typeorm_1.Entity)("messages")
-], Message);
+], SubMessage.prototype, "childSubMessages", void 0);
+exports.SubMessage = SubMessage = __decorate([
+    (0, typeorm_1.Entity)("subMessages")
+], SubMessage);

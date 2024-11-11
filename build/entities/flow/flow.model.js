@@ -15,6 +15,10 @@ const base_model_1 = require("../base/base.model");
 const message_1 = require("../message");
 const pricingPlan_model_1 = require("../pricingPlan/pricingPlan.model");
 let Flow = class Flow extends base_model_1.Base {
+    constructor() {
+        super(...arguments);
+        this.isDeleted = false;
+    }
 };
 exports.Flow = Flow;
 __decorate([
@@ -30,6 +34,14 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Flow.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: "boolean",
+        nullable: true,
+        default: false,
+    }),
+    __metadata("design:type", Object)
+], Flow.prototype, "isDeleted", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => message_1.Message, (message) => message.flow),
     __metadata("design:type", Array)

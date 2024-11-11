@@ -22,3 +22,4 @@ __exportStar(require("./message/message.model"), exports);
 __exportStar(require("./flow/flow.model"), exports);
 __exportStar(require("./pricingPlan/pricingPlan.model"), exports);
 __exportStar(require("./example/example.model"), exports);
+__exportStar(require("./subMessage/subMessage.model"), exports);

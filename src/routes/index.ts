@@ -6,3 +6,4 @@ export * from "./flow.route";
 export * from "./pricingPlan.route";
 export * from "./authenticated.route";
 export * from "./session.route";
+export * from "./subMessage.route";

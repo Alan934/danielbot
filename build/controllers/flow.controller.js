@@ -66,5 +66,67 @@ class FlowController extends controllerGenerics_1.GenericController {
         });
         this.flowRepository = new flow_repository_1.FlowRepository();
     }
+    // Controlador para obtener todos los flujos con sus mensajes y submensajes
+    findAllFlowsWithMessages(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const idEnterprise = yield this.getEnterpriseId(req, res);
+                const flows = yield this.flowRepository.getAllWithMessagesAndSubMessages(idEnterprise);
+                if (!flows || flows.length === 0) {
+                    return res.status(404).json({ message: "No flows found" });
+                }
+                const flowsDto = flows.map((flow) => (0, utils_1.toDtoFromEntity)(flow_dto_1.FlowDto, flow));
+                return res.status(200).json(flowsDto);
+            }
+            catch (error) {
+                return (0, utils_1.handleErrors)(error, res);
+            }
+        });
+    }
+    // Controlador para obtener un flujo específico con sus mensajes y submensajes
+    getOneWithMessagesAndSubMessages(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.params.id;
+                const idEnterprise = yield this.getEnterpriseId(req, res);
+                const flow = yield this.flowRepository.getOneWithMessagesAndSubMessages(id, idEnterprise);
+                if (!flow) {
+                    return res.status(404).json({ message: "Flow not found" });
+                }
+                const flowDto = (0, utils_1.toDtoFromEntity)(flow_dto_1.FlowDto, flow);
+                return res.status(200).json(flowDto);
+            }
+            catch (error) {
+                return (0, utils_1.handleErrors)(error, res);
+            }
+        });
+    }
+    // Obtener todos los flujos con sus mensajes y submensajes
+    getAllWithMessagesAndSubMessages(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const idEnterprise = yield this.getEnterpriseId(req, res);
+                const flows = yield this.flowRepository.getAllWithMessagesAndSubMessages(idEnterprise);
+                const flowsDto = flows.map((flow) => (0, utils_1.toDtoFromEntity)(flow_dto_1.FlowDto, flow));
+                return res.status(200).json(flowsDto);
+            }
+            catch (error) {
+                return (0, utils_1.handleErrors)(error, res);
+            }
+        });
+    }
+    // Soft delete de un flujo específico
+    softDeleteFlow(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.params.id;
+                yield this.flowRepository.softDeleteFlow(id);
+                return res.status(200).json({ message: `Flow with id ${id} successfully deleted.` });
+            }
+            catch (error) {
+                return (0, utils_1.handleErrors)(error, res);
+            }
+        });
+    }
 }
 exports.FlowController = FlowController;

@@ -256,5 +256,186 @@ class MessageRepository extends repositoryGenerics_1.GenericRepository {
             }
         });
     }
+    findAllMainMessages(idEnterprise) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log("idEnterprise = " + idEnterprise);
+                const rootMessages = yield this.repository
+                    .createQueryBuilder("message")
+                    .leftJoinAndSelect("message.childMessages", "childMessages")
+                    .where("message.fatherMessageId IS NULL")
+                    .andWhere("message.enterprise = :idEnterprise", { idEnterprise })
+                    .orderBy("message.numOrder", "ASC")
+                    .getMany();
+                for (const message of rootMessages) {
+                    for (const child of message.childMessages) {
+                        child.childMessages = yield this.findChildMessages(child.id);
+                    }
+                }
+                return rootMessages;
+            }
+            catch (error) {
+                throw (0, errorHandler_1.handleRepositoryError)(error);
+            }
+        });
+    }
+    findAllMainMessagesWithIdFlow(idEnterprise, idFlow) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const rootMessages = yield this.repository
+                    .createQueryBuilder("message")
+                    .leftJoinAndSelect("message.childMessages", "childMessages")
+                    .where("message.fatherMessageId IS NULL")
+                    .andWhere("message.enterpriseId = :idEnterprise", { idEnterprise })
+                    .andWhere("message.flowId = :idFlow", { idFlow })
+                    .orderBy("message.numOrder", "ASC")
+                    .getMany();
+                //console.log(JSON.stringify(rootMessages, null, 2))
+                for (const message of rootMessages) {
+                    for (const child of message.childMessages) {
+                        child.childMessages = yield this.findChildMessages(child.id);
+                    }
+                }
+                return rootMessages;
+            }
+            catch (error) {
+                throw (0, errorHandler_1.handleRepositoryError)(error);
+            }
+        });
+    }
+    findChildMessages(parentMessageId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const childMessages = yield this.repository
+                .createQueryBuilder("message")
+                .leftJoinAndSelect("message.childMessages", "childMessages")
+                .where("message.fatherMessageId = :parentMessageId", { parentMessageId })
+                .orderBy("message.numOrder", "ASC")
+                .getMany();
+            // Recursivamente revisa cada hijo y carga sus hijos, si tiene
+            for (const child of childMessages) {
+                if (child.childMessages.length > 0) {
+                    child.childMessages = yield this.findChildMessages(child.id); // Carga hijos de nivel más profundo si es necesario
+                }
+            }
+            return childMessages;
+        });
+    }
+    // GetAll de los mensajes con sus submensajes, filtrando por `idEnterprise`
+    getMessagesWithSubMessages(idEnterprise) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const entities = yield this.repository.find({
+                    where: {
+                        enterprise: { id: idEnterprise },
+                        isDeleted: false,
+                    },
+                    relations: [
+                        "flow",
+                        "subMessages",
+                        "subMessages.childSubMessages",
+                        "subMessages.childSubMessages.childSubMessages",
+                    ],
+                    order: {
+                        numOrder: "ASC",
+                    },
+                });
+                if (!entities || entities.length === 0) {
+                    throw new types_1.CustomError("No messages found", 404);
+                }
+                return entities;
+            }
+            catch (error) {
+                throw (0, errorHandler_1.handleRepositoryError)(error);
+            }
+        });
+    }
+    // GetOne de un mensaje específico con sus submensajes por ID y `idEnterprise`
+    getOneWithSubMessages(id, idEnterprise) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const entity = yield this.repository.findOne({
+                    where: {
+                        id: id,
+                        enterprise: { id: idEnterprise },
+                        isDeleted: false,
+                    },
+                    relations: [
+                        "flow",
+                        "subMessages",
+                        "subMessages.childSubMessages",
+                        "subMessages.childSubMessages.childSubMessages",
+                    ],
+                });
+                if (!entity) {
+                    throw new types_1.CustomError("Entity not found", 404);
+                }
+                return entity;
+            }
+            catch (error) {
+                throw (0, errorHandler_1.handleRepositoryError)(error);
+            }
+        });
+    }
+    updateMessage(id, data, idEnterprise, idFlow) {
+        var _a, _b, _c, _d, _e, _f;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const message = yield this.findOne({ where: { id } });
+                if (!message) {
+                    throw new types_1.CustomError("Message not found", 404);
+                }
+                if (idEnterprise) {
+                    const enterpriseRepository = new enterprise_repository_1.EnterpriseRepository();
+                    if (!(0, uuid_1.validate)(idEnterprise)) {
+                        throw new types_1.CustomError("El formato del ID de enterprise no es válido", 400);
+                    }
+                    const entityEnterprise = yield enterpriseRepository.findOne({ where: { id: idEnterprise } });
+                    if (!entityEnterprise) {
+                        throw new types_1.CustomError("Enterprise not found", 404);
+                    }
+                    message.enterprise = entityEnterprise; // Solo actualizar si se pasa una empresa válida
+                }
+                if (idFlow) {
+                    const flowRepository = new flow_repository_1.FlowRepository();
+                    if (!(0, uuid_1.validate)(idFlow)) {
+                        throw new types_1.CustomError("El formato del ID de flow no es válido", 400);
+                    }
+                    const entityFlow = yield flowRepository.findOne({ where: { id: idFlow } });
+                    if (!entityFlow) {
+                        throw new types_1.CustomError("Flow not found", 404);
+                    }
+                    message.flow = entityFlow; // Solo actualizar si se pasa un flujo válido
+                }
+                message.numOrder = (_a = data.numOrder) !== null && _a !== void 0 ? _a : message.numOrder;
+                message.body = (_b = data.body) !== null && _b !== void 0 ? _b : message.body;
+                message.option = (_c = data.option) !== null && _c !== void 0 ? _c : message.option;
+                message.isNumber = (_d = data.isNumber) !== null && _d !== void 0 ? _d : message.isNumber;
+                message.showName = (_e = data.showName) !== null && _e !== void 0 ? _e : message.showName;
+                message.isName = (_f = data.isName) !== null && _f !== void 0 ? _f : message.isName;
+                const updatedMessage = yield this.save(message);
+                return updatedMessage;
+            }
+            catch (error) {
+                console.error("Error updating message:", error);
+                throw (0, errorHandler_1.handleRepositoryError)(error);
+            }
+        });
+    }
+    // Realiza el soft delete
+    softDeleteMessage(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const message = yield this.findOne({ where: { id } });
+                if (!message) {
+                    throw new types_1.CustomError("Message not found", 404);
+                }
+                message.isDeleted = true;
+                yield this.repository.save(message);
+            }
+            catch (error) {
+                throw (0, errorHandler_1.handleRepositoryError)(error);
+            }
+        });
+    }
 }
 exports.MessageRepository = MessageRepository;

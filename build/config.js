@@ -28,13 +28,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.limit = exports.dbConfig = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
-const Entities = __importStar(require("./entities/index"));
+const Entities = __importStar(require("./entities")); // Asegúrate de importar todas las entidades correctamente
 dotenv_1.default.config();
 exports.dbConfig = {
     type: process.env.DB_TYPE || "postgres",
     url: process.env.DB_URL || "sqlite:memory",
     entities: Object.values(Entities),
-    synchronize: process.env.SYNC_DATABASE || true,
+    synchronize: true,
+    subscribers: [],
+    migrations: [],
 };
-//Limite de items devuetos por página
-exports.limit = 20;
+exports.limit = 20; // Límite de items devueltos por página

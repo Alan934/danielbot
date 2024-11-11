@@ -14,12 +14,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./profile.controller"), exports);
-__exportStar(require("./client.controller"), exports);
-__exportStar(require("./message.controller"), exports);
-__exportStar(require("./enterprise.controller"), exports);
-__exportStar(require("./flow.controller"), exports);
-__exportStar(require("./pricingPlan.controller"), exports);
-__exportStar(require("./session.controller"), exports);
-__exportStar(require("./subMessage.controller"), exports);
-/* export * from "./example.controller"; */
+__exportStar(require("./subMessage.model"), exports);
+__exportStar(require("./dto/subMessage.dto"), exports);

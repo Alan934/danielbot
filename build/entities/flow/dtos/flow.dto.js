@@ -13,6 +13,9 @@ exports.FlowDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const PricingPlanSummaryDto_1 = require("../../pricingPlan/dtos/PricingPlanSummaryDto");
 class FlowDto {
+    constructor() {
+        this.isDeleted = false;
+    }
 }
 exports.FlowDto = FlowDto;
 __decorate([
@@ -23,6 +26,10 @@ __decorate([
     (0, class_transformer_1.Expose)(),
     __metadata("design:type", String)
 ], FlowDto.prototype, "description", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)(),
+    __metadata("design:type", Boolean)
+], FlowDto.prototype, "isDeleted", void 0);
 __decorate([
     (0, class_transformer_1.Expose)(),
     (0, class_transformer_1.Type)(() => PricingPlanSummaryDto_1.PricingPlanSummaryDto),

@@ -10,6 +10,9 @@ export class FlowDto {
   description!: string;
 
   @Expose()
+  isDeleted: boolean = false;
+
+  @Expose()
   @Type(() => PricingPlanSummaryDto)
   pricingPlans?: PricingPlan[];
 }

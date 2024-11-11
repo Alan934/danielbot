@@ -40,13 +40,16 @@ class GenericController {
         return __awaiter(this, void 0, void 0, function* () {
             const profileRepository = new repositories_1.ProfileRepository();
             var profile;
-            const propertiesOfEntity = this.repository.metadata.columns.map((column) => column.propertyName);
-            if (propertiesOfEntity.includes("enterprise")) {
-                profile = yield (0, jwt_1.getUserByJWT)(req);
-                if (profile instanceof types_1.CustomError) {
-                    return (0, errorsHandler_1.handleErrors)(profile, res);
-                }
+            // const propertiesOfEntity = this.repository.metadata.columns.map(
+            //   (column) => column.propertyName
+            //);
+            //if (propertiesOfEntity.includes("enterprise")) {
+            profile = yield (0, jwt_1.getUserByJWT)(req);
+            if (profile instanceof types_1.CustomError) {
+                return (0, errorsHandler_1.handleErrors)(profile, res);
             }
+            //  console.log(JSON.stringify(profile,null,2));
+            // }
             const profileId = profile ? profile.sub : undefined;
             var enterpriseId;
             if (profileId && profileRepository) {

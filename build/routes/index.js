@@ -22,3 +22,4 @@ __exportStar(require("./flow.route"), exports);
 __exportStar(require("./pricingPlan.route"), exports);
 __exportStar(require("./authenticated.route"), exports);
 __exportStar(require("./session.route"), exports);
+__exportStar(require("./subMessage.route"), exports);

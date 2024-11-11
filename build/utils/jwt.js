@@ -13,15 +13,15 @@ exports.getUserByJWT = exports.verifyJWT = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const types_1 = require("../types");
 const secret = process.env.JWT_SECRET || "";
-const verifyJWT = (token) => __awaiter(void 0, void 0, void 0, function* () {
+const verifyJWT = (token) => {
     try {
-        const decodedToken = yield (0, jsonwebtoken_1.verify)(token, secret);
+        const decodedToken = (0, jsonwebtoken_1.verify)(token, secret);
         return decodedToken;
     }
     catch (error) {
         throw new types_1.CustomError("Failed to authenticate token" + error, 401);
     }
-});
+};
 exports.verifyJWT = verifyJWT;
 const getUserByJWT = (req) => __awaiter(void 0, void 0, void 0, function* () {
     try {

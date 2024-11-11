@@ -71,4 +71,97 @@ export class FlowController extends GenericController<Flow, FlowDto> {
       return handleErrors(error, res);
     }
   };
+
+  // Controlador para obtener todos los flujos con sus mensajes y submensajes
+  async findAllFlowsWithMessages(req: Request, res: Response) {
+    try {
+      const idEnterprise = await this.getEnterpriseId(req, res);
+      const flows = await this.flowRepository.getAllWithMessagesAndSubMessages(idEnterprise);
+
+      if (!flows || flows.length === 0) {
+        return res.status(404).json({ message: "No flows found" });
+      }
+
+      const flowsDto = flows.map((flow) => toDtoFromEntity(FlowDto, flow));
+      return res.status(200).json(flowsDto);
+    } catch (error) {
+      return handleErrors(error, res);
+    }
+  }
+    
+  // Controlador para obtener un flujo específico con sus mensajes y submensajes
+  async getOneWithMessagesAndSubMessages(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const idEnterprise = await this.getEnterpriseId(req, res);
+      const flow = await this.flowRepository.getOneWithMessagesAndSubMessages(id, idEnterprise);
+
+      if (!flow) {
+        return res.status(404).json({ message: "Flow not found" });
+      }
+
+      const flowDto = toDtoFromEntity(FlowDto, flow);
+      return res.status(200).json(flowDto);
+    } catch (error) {
+      return handleErrors(error, res);
+    }
+  }
+
+
+  // Obtener todos los flujos con sus mensajes y submensajes
+  async getAllWithMessagesAndSubMessages(req: Request, res: Response) {
+      try {
+          const idEnterprise = await this.getEnterpriseId(req, res);
+          const flows = await this.flowRepository.getAllWithMessagesAndSubMessages(idEnterprise);
+          const flowsDto = flows.map((flow) => toDtoFromEntity(FlowDto, flow));
+          return res.status(200).json(flowsDto);
+      } catch (error) {
+          return handleErrors(error, res);
+      }
+  }
+
+  // Controlador para obtener un flujo específico con mensajes `option == "MENU"` y sus submensajes
+  async getOneWithMenuMessagesAndSubMessages(req: Request, res: Response) {
+    try {
+        const id = req.params.id;
+        const idEnterprise = await this.getEnterpriseId(req, res);
+        const flow = await this.flowRepository.getOneWithMenuMessagesAndSubMessages(id, idEnterprise);
+
+        if (!flow) {
+            return res.status(404).json({ message: "Flow not found" });
+        }
+
+        const flowDto = toDtoFromEntity(FlowDto, flow);
+        return res.status(200).json(flowDto);
+    } catch (error) {
+        return handleErrors(error, res);
+    }
+  }
+
+  // Controlador para obtener todos los flujos con mensajes `option == "MENU"` y sus submensajes
+  async getAllWithMenuMessagesAndSubMessages(req: Request, res: Response) {
+    try {
+        const idEnterprise = await this.getEnterpriseId(req, res);
+        const flows = await this.flowRepository.getAllWithMenuMessagesAndSubMessages(idEnterprise);
+        const flowsDto = flows.map((flow) => toDtoFromEntity(FlowDto, flow));
+        return res.status(200).json(flowsDto);
+    } catch (error) {
+        return handleErrors(error, res);
+    }
+  }
+
+
+  // Soft delete de un flujo específico
+  public async softDeleteFlow(req: Request, res: Response): Promise<Response> {
+    try {
+      const id = req.params.id;
+
+      await this.flowRepository.softDeleteFlow(id);
+
+      return res.status(200).json({ message: `Flow with id ${id} successfully deleted.` });
+    } catch (error) {
+      return handleErrors(error, res);
+    }
+  }
+
 }
