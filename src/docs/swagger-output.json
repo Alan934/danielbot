@@ -335,50 +335,6 @@
         ]
       }
     },
-    "/flows/getOneWithMenuMessagesAndSubMessages/{id}": {
-      "get": {
-        "tags": [
-          "Flow"
-        ],
-        "description": "Obtiene un flujo específico con solo los mensajes que tienen `option == \"MENU\"` y sus submensajes.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/flows/getAllWithMenuMessagesAndSubMessages": {
-      "get": {
-        "tags": [
-          "Flow"
-        ],
-        "description": "Obtiene todos los flujos con solo los mensajes que tienen `option == \"MENU\"` y sus submensajes.",
-        "responses": {
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/messages/getAllWithFlow": {
       "get": {
         "tags": [
@@ -629,24 +585,6 @@
             "description": "ID del mensaje a eliminar"
           }
         ],
-        "responses": {
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/messages/menuWithChildren": {
-      "get": {
-        "tags": [
-          "Message"
-        ],
-        "description": "Esta ruta trae todos los mensajes con opción \"MENU\" junto con sus submensajes y sus respectivos submensajes hijos.",
         "responses": {
           "500": {
             "description": "Internal Server Error"

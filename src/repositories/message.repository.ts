@@ -398,36 +398,6 @@ export class MessageRepository extends GenericRepository<Message> {
     }
   }
 
-  // Obtener mensajes con `option == "MENU"` y sus submensajes
-  public async getMessagesWithMenuOption(idEnterprise: string): Promise<Message[]> {
-    try {
-        const entities = await this.repository.find({
-            where: {
-                option: "MENU",
-                isDeleted: false,
-                enterprise: { id: idEnterprise },
-            },
-            relations: [
-                "flow",
-                "subMessages",
-                "subMessages.childSubMessages",
-            ],
-            order: {
-                numOrder: "ASC",
-            },
-        });
-
-        if (!entities || entities.length === 0) {
-            throw new CustomError("No menu messages found", 404);
-        }
-
-        return entities;
-    } catch (error) {
-        throw handleRepositoryError(error);
-    }
-  }
-
-  // Actualizar un mensaje
   public async updateMessage(
       id: string,
       data: MessageDto,

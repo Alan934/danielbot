@@ -22,18 +22,18 @@ export class SubMessageRepository extends GenericRepository<SubMessage> {
     public async getAllSubMessages(idEnterprise: string): Promise<SubMessage[]> {
         try {
             const entities = await this.repository.find({
-            where: {
-                isDeleted: false,
-                message: { enterprise: { id: idEnterprise } },
-            },
-            relations: [
-                "childSubMessages",
-                "parentSubMessage",
-                "message",
-            ],
-            order: {
-                numOrder: "ASC",
-            },
+                where: {
+                    isDeleted: false,
+                    message: { enterprise: { id: idEnterprise } },
+                },
+                relations: [
+                    "childSubMessages",
+                    "parentSubMessage",
+                    "message",
+                ],
+                order: {
+                    numOrder: "ASC",
+                },
             });
 
             if (!entities || entities.length === 0) {
@@ -50,16 +50,19 @@ export class SubMessageRepository extends GenericRepository<SubMessage> {
     public async getOneSubMessage(id: string, idEnterprise: string): Promise<SubMessage> {
         try {
             const subMessage = await this.repository.findOne({
-            where: {
-                id: id,
-                isDeleted: false,
-                message: { enterprise: { id: idEnterprise } },
-            },
-            relations: [
-                "childSubMessages",
-                "parentSubMessage",
-                "message",
-            ],
+                where: {
+                    id: id,
+                    isDeleted: false,
+                    message: { enterprise: { id: idEnterprise } },
+                },
+                relations: [
+                    "childSubMessages",
+                    "parentSubMessage",
+                    "message",
+                ],
+                order: {
+                    numOrder: "ASC",
+                },
             });
 
             if (!subMessage) {

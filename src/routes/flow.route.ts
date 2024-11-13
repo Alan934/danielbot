@@ -154,35 +154,6 @@ export const flowRouter = () => {
       */
       flowController.softDeleteFlow(req, res)
   );
-
-  flowRoutes.get(
-    "/getOneWithMenuMessagesAndSubMessages/:id",
-    authMiddleware,
-    checkRoleAuth(["admin", "redactor"]),
-    (req, res) =>
-      /* 
-      #swagger.path = '/flows/getOneWithMenuMessagesAndSubMessages/{id}'
-      #swagger.tags = ['Flow']
-      #swagger.description = 'Obtiene un flujo específico con solo los mensajes que tienen `option == "MENU"` y sus submensajes.'
-      #swagger.security = [{ "bearerAuth": [] }]
-      */
-      flowController.getOneWithMenuMessagesAndSubMessages(req, res)
-  );
-
-  flowRoutes.get(
-    "/getAllWithMenuMessagesAndSubMessages",
-    authMiddleware,
-    checkRoleAuth(["admin", "redactor"]),
-    (req, res) =>
-      /* 
-      #swagger.path = '/flows/getAllWithMenuMessagesAndSubMessages'
-      #swagger.tags = ['Flow']
-      #swagger.description = 'Obtiene todos los flujos con solo los mensajes que tienen `option == "MENU"` y sus submensajes.'
-      #swagger.security = [{ "bearerAuth": [] }]
-      */
-      flowController.getAllWithMenuMessagesAndSubMessages(req, res)
-  );
-
   // flowRoutes.get("/", (req, res) => flowController.getAll(req, res));
   // flowRoutes.get("/getAllDeleted/", (req, res) => flowController.getAllDeleted(req, res));
   // flowRoutes.get("/getById/:id", (req, res) => flowController.getById(req, res));

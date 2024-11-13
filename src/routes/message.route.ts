@@ -235,21 +235,6 @@ export const messageRouter = () => {
       */
         messageController.softDeleteMessage(req, res)
   );
-
-  messageRoutes.get(
-    "/menuWithChildren",
-    authMiddleware,
-    checkRoleAuth(["admin", "redactor"]),
-    (req, res) =>
-      /* 
-      #swagger.path = '/messages/menuWithChildren'
-      #swagger.tags = ['Message']
-      #swagger.description = 'Esta ruta trae todos los mensajes con opción "MENU" junto con sus submensajes y sus respectivos submensajes hijos.'
-      #swagger.security = [{ "bearerAuth": [] }]
-      */
-      messageController.getMenuMessagesWithSubMessages(req, res)
-);
-
   // messageRoutes.get("/messages-with-submessages", authMiddleware, funcionando con metodo comentado de controller
   // checkRoleAuth(["admin", "redactor"]), MessageController.getMessagesWithSubMessages);
 

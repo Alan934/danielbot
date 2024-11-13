@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { DatabaseType } from "typeorm";
-import * as Entities from "./entities";  // Asegúrate de importar todas las entidades correctamente
+import * as Entities from "./entities";
 
 dotenv.config();
 
