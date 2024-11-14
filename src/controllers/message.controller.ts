@@ -164,7 +164,20 @@ export class MessageController extends GenericController<Message, MessageDto> {
     }
   }
 
-  // Controlador para actualizar un mensaje
+  // Obtener mensajes con `option == "MENU"` y sus submensajes
+  async getMenuMessagesWithSubMessages(req: Request, res: Response) {
+    try {
+        const idEnterprise = await this.getEnterpriseId(req, res);
+        const entities = await this.messageRepository.getMessagesWithMenuOption(idEnterprise);
+        const messagesDto = entities.map((message) => toDtoFromEntity(MessageDto, message));
+        
+        return res.status(200).json(messagesDto);
+    } catch (error) {
+        return handleErrors(error, res);
+    }
+  }
+
+  // Actualizar un mensaje
   async updateMessage(req: Request, res: Response) {
     try {
       const id = req.params.id;

@@ -54,12 +54,13 @@ export class SubMessage extends Base {
   message!: Message;
 
   // Relación de padre-hijo entre submensajes
-  @ManyToOne(() => SubMessage, (subMessage) => subMessage.childSubMessages, {
+  @ManyToOne(() => SubMessage, (subMessage) => subMessage.subMessages, {
     nullable: true,
     onDelete: "SET NULL",
   })
   parentSubMessage!: SubMessage | null;
 
   @OneToMany(() => SubMessage, (subMessage) => subMessage.parentSubMessage)
-  childSubMessages!: SubMessage[];
+  subMessages!: SubMessage[];
+  
 }

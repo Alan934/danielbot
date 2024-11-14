@@ -120,6 +120,37 @@ export class FlowController extends GenericController<Flow, FlowDto> {
       }
   }
 
+  // Controlador para obtener un flujo específico con mensajes `option == "MENU"` y sus submensajes
+  async getOneWithMenuMessagesAndSubMessages(req: Request, res: Response) {
+    try {
+        const id = req.params.id;
+        const idEnterprise = await this.getEnterpriseId(req, res);
+        const flow = await this.flowRepository.getOneWithMenuMessagesAndSubMessages(id, idEnterprise);
+
+        if (!flow) {
+            return res.status(404).json({ message: "Flow not found" });
+        }
+
+        const flowDto = toDtoFromEntity(FlowDto, flow);
+        return res.status(200).json(flowDto);
+    } catch (error) {
+        return handleErrors(error, res);
+    }
+  }
+
+  // Controlador para obtener todos los flujos con mensajes `option == "MENU"` y sus submensajes
+  async getAllWithMenuMessagesAndSubMessages(req: Request, res: Response) {
+    try {
+        const idEnterprise = await this.getEnterpriseId(req, res);
+        const flows = await this.flowRepository.getAllWithMenuMessagesAndSubMessages(idEnterprise);
+        const flowsDto = flows.map((flow) => toDtoFromEntity(FlowDto, flow));
+        return res.status(200).json(flowsDto);
+    } catch (error) {
+        return handleErrors(error, res);
+    }
+  }
+
+
   // Soft delete de un flujo específico
   public async softDeleteFlow(req: Request, res: Response): Promise<Response> {
     try {

@@ -192,6 +192,34 @@ export class FlowRepository extends GenericRepository<Flow> {
     }
   }
   
+  // Obtener un flujo específico con mensajes `option == "MENU"` y sus submensajes
+  public async getOneWithMenuMessagesAndSubMessages(id: string, idEnterprise: string): Promise<Flow | undefined> {
+    try {
+        const entity = await this.repository.findOne({
+            where: { id, isDeleted: false },
+        });
+
+        if (!entity) {
+            throw new CustomError("Flow not found", 404);
+        }
+
+        const messageRepository = new MessageRepository();
+        entity.messages = await messageRepository.getMessagesWithMenuOption(idEnterprise);
+
+        // Filtrar mensajes que pertenecen a este flujo y eliminar `flow` de cada mensaje
+        entity.messages = entity.messages
+            .filter((message) => message.flow && message.flow.id === id)
+            .map((message) => {
+                const { flow, ...messageWithoutFlow } = message;
+                return messageWithoutFlow;
+            });
+
+        return entity;
+    } catch (error) {
+        throw handleRepositoryError(error);
+    }
+  }
+
   // Obtener todos los flujos con sus mensajes y submensajes
   public async getAllWithMessagesAndSubMessages(idEnterprise: string): Promise<Flow[]> {
     try {
@@ -200,27 +228,27 @@ export class FlowRepository extends GenericRepository<Flow> {
         where: { id: idEnterprise },
         relations: ["pricingPlan"],
       });
-  
+
       if (!entityEnterprise) {
         throw new CustomError("Enterprise not found", 404);
       }
-  
+
       const enterprisePlanId = entityEnterprise.pricingPlan?.id;
       if (!enterprisePlanId) {
         throw new CustomError("Enterprise does not have an assigned plan", 400);
       }
-  
+
       const flows = await this.repository.find({
         where: { isDeleted: false },
       });
-  
+
       if (flows.length === 0) {
         return [];
       }
-  
+
       const messageRepository = new MessageRepository();
       const allMessagesWithSubMessages = await messageRepository.getMessagesWithSubMessages(idEnterprise);
-  
+
       // Asignar mensajes a cada flujo según el flujo asociado y eliminar `flow` de cada mensaje
       for (const flow of flows) {
         flow.messages = allMessagesWithSubMessages
@@ -230,13 +258,43 @@ export class FlowRepository extends GenericRepository<Flow> {
             return messageWithoutFlow;
           });
       }
-  
+
       return flows;
     } catch (error) {
       throw handleRepositoryError(error);
     }
   }
 
+  // Obtener todos los flujos con mensajes `option == "MENU"` y sus submensajes
+  public async getAllWithMenuMessagesAndSubMessages(idEnterprise: string): Promise<Flow[]> {
+    try {
+        const flows = await this.repository.find({
+            where: { isDeleted: false },
+        });
+
+        if (flows.length === 0) {
+            return [];
+        }
+
+        const messageRepository = new MessageRepository();
+        const allMenuMessagesWithSubMessages = await messageRepository.getMessagesWithMenuOption(idEnterprise);
+
+        // Asignar los mensajes a cada flujo y eliminar `flow` de cada mensaje
+        for (const flow of flows) {
+          flow.messages = allMenuMessagesWithSubMessages
+            .filter((message) => message.flow && message.flow.id === flow.id)
+            .map((message) => {
+                const { flow, ...messageWithoutFlow } = message;
+                return messageWithoutFlow;
+            });
+        }
+
+        return flows;
+    } catch (error) {
+        throw handleRepositoryError(error);
+    }
+  }
+  
   // Realiza el soft delete
   public async softDeleteFlow(id: string): Promise<void> {
     try {

@@ -34,5 +34,6 @@ export class SubMessageDto {
 
   @Expose()
   @Type(() => SubMessage)
-  childSubMessages!: SubMessage[] | undefined;
+  subMessages!: SubMessage[] | undefined;
+  
 }

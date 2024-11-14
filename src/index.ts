@@ -3,7 +3,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { AppDataSource } from "./data-source";
 import * as Routes from "./routes/index";
-import swaggerUi, { SwaggerUiOptions } from "swagger-ui-express";
+import swaggerUi from "swagger-ui-express";
 import swaggerFile from "./docs/swagger-output.json";
 
 const app = express();
@@ -30,28 +30,21 @@ apiV1Router.use("/session", Routes.sessionRouter());
 app.use("/docs", swaggerUi.serve);
 
 //Utilizar este en desarrollo
-//app.get("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.get("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 //Utilizar este en produccion
 
-
-const swaggerConfig: SwaggerUiOptions = {
-  customSiteTitle: 'Backend Generator',
-  customfavIcon: 'https://avatars.githubusercontent.com/u/185267919?s=400&u=7d74f9c123b27391d3f11da2815de1e9a1031ca9&v=4',
-  customJs: [
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js',
-  ],
-  customCssUrl: [
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css',
-  ],
-};
-
-app.get("/docs", swaggerUi.setup(swaggerFile, swaggerConfig));
-app.get("/docs", swaggerUi.setup(swaggerFile));
-
+// app.get("/docs", swaggerUi.setup(swaggerFile, {customSiteTitle: 'Backend Generator',
+// customfavIcon: 'https://avatars.githubusercontent.com/u/185267919?s=400&u=7d74f9c123b27391d3f11da2815de1e9a1031ca9&v=4',
+// customJs: [
+//   'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
+//   'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js',
+// ],
+// customCssUrl: [
+//   'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+//   'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.css',
+//   'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css',
+// ],}));
 
 // Middleware para manejar rutas no encontradas
 app.use((_req: Request, res: Response) => {

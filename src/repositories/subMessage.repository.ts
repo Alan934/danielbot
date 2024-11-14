@@ -13,27 +13,27 @@ export class SubMessageRepository extends GenericRepository<SubMessage> {
     //private flowRepository = new FlowRepository();
 
     constructor() {
-    super(SubMessage);
-    this.repository = AppDataSource.getRepository(SubMessage);
-    // this.flowRepository = new FlowRepository();
+        super(SubMessage);
+        this.repository = AppDataSource.getRepository(SubMessage);
+        // this.flowRepository = new FlowRepository();
     }
 
     // Obtener todos los submensajes con sus relaciones, filtrando por `idEnterprise` y `isDeleted`
     public async getAllSubMessages(idEnterprise: string): Promise<SubMessage[]> {
         try {
             const entities = await this.repository.find({
-                where: {
-                    isDeleted: false,
-                    message: { enterprise: { id: idEnterprise } },
-                },
-                relations: [
-                    "childSubMessages",
-                    "parentSubMessage",
-                    "message",
-                ],
-                order: {
-                    numOrder: "ASC",
-                },
+            where: {
+                isDeleted: false,
+                message: { enterprise: { id: idEnterprise } },
+            },
+            relations: [
+                "subMessages",
+                "parentSubMessage",
+                "message",
+            ],
+            order: {
+                numOrder: "ASC",
+            },
             });
 
             if (!entities || entities.length === 0) {
@@ -56,7 +56,7 @@ export class SubMessageRepository extends GenericRepository<SubMessage> {
                     message: { enterprise: { id: idEnterprise } },
                 },
                 relations: [
-                    "childSubMessages",
+                    "subMessages",
                     "parentSubMessage",
                     "message",
                 ],
@@ -106,7 +106,7 @@ export class SubMessageRepository extends GenericRepository<SubMessage> {
                 isNumber: data.isNumber,
                 message: entityMessage,
                 parentSubMessage: parentSubMessage,
-                childSubMessages: [],
+                subMessages: [],
             });
         
             const savedSubMessage = await this.save(newSubMessage);
